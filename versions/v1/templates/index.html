@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Status</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+
+<h1>Server Status</h1>
+
+<table id="serverTable">
+    <thead>
+        <tr>
+            <th>
+                Hostname
+                <input type="text" id="filterHostname" placeholder="Filter" onkeyup="filterTable()">
+            </th>
+            <th>
+                IP Address
+                <input type="text" id="filterIP" placeholder="Filter" onkeyup="filterTable()">
+            </th>
+            <th>
+                Status
+                <input type="text" id="filterStatus" placeholder="Filter" onkeyup="filterTable()">
+            </th>
+            <th>
+                Last Refreshed
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for server in servers %}
+        <tr>
+            <td>{{ server.hostname }}</td>
+            <td>{{ server.ip_address }}</td>
+            <td class="{{ server.status }}">{{ server.status }}</td>
+            <td>{{ server.last_refreshed }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function filterTable() {
+    const hostnameInput = document.getElementById("filterHostname").value.toLowerCase();
+    const ipInput = document.getElementById("filterIP").value.toLowerCase();
+    const statusInput = document.getElementById("filterStatus").value.toLowerCase();
+
+    const table = document.getElementById("serverTable");
+    const rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+        const hostnameMatch = cells[0].textContent.toLowerCase().includes(hostnameInput);
+        const ipMatch = cells[1].textContent.toLowerCase().includes(ipInput);
+        const statusMatch = cells[2].textContent.toLowerCase().includes(statusInput);
+
+        rows[i].style.display = (hostnameMatch && ipMatch && statusMatch) ? "" : "none";
+    }
+}
+</script>
+
+</body>
+</html>
